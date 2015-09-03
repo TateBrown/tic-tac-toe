@@ -25,7 +25,7 @@ Other advanced ideas:
 
 
 var pieceTypes = {
-	blank : "-",
+	empty : "-",
 	X : "X",
 	O : "O"
 }
@@ -34,8 +34,6 @@ var player1 = pieceTypes.X;
 var player2 = pieceTypes.O;
 
 var currentPlayer = player1;
-
-var currentPlayer = player2;
 
 var gameSize = 9;  //9 squares (3x3 board)
 
@@ -50,19 +48,48 @@ var board =
 
 //TODO: make the board empty again
 function resetBoardState(){
-
+	board = 
+	[
+		pieceTypes.empty,pieceTypes.empty,pieceTypes.empty,
+		pieceTypes.empty,pieceTypes.empty,pieceTypes.empty,
+		pieceTypes.empty,pieceTypes.empty,pieceTypes.empty
+	];
+	for (var i = 0; i < gameSize; i++){
+		$("#square" + i).text(pieceTypes.empty);
+	}
+	
 }
 /*TODO: change the player after they've placed a piece */
 function changeTurns(){
-	/* doing nothing currently */
+	if (currentPlayer == player1){
+		currentPlayer = player2;
+	}else {
+		currentPlayer = player1;
+	}
 }
 /*TODO: returns a true/ false value indicating whether there is a piece in this spot. */
-function isSquareOccupied(piece){
-	return true;
+function isSquareOccupied(index){
+	if (board[index] == pieceTypes.empty){
+		return false;
+	}
+	else {
+		return true;
+	}
+	
 }
 /*TODO:  returns a true / false value indicating whether a player has won */
 function checkForWin(board){
-	return false;
+	//horizontally, first row 
+	var value = board[0] + board[1] + board[2]; //"XXX" or "YYY" or "YX-"
+	if (value == (player1 + player1 + player1)){
+		return player1;
+	}
+	else if (value == (player2 + player2 + player2)){
+		return player2;
+	}
+	else {
+		return pieceTypes.empty;
+	}
 }
 
 function promptWinner(player){
@@ -81,8 +108,10 @@ function placePiece(index,player){
 function onSquareClicked(element){
 	var squareData = getSquareDataForElement(element.currentTarget);
 	console.log(squareData);
-	placePiece(squareData.index,currentPlayer);
-
+	
+	if (isSquareOccupied(squareData.index) == false){
+		placePiece(squareData.index,currentPlayer);
+	}
 }
 
 
@@ -108,8 +137,13 @@ function attachClickEvents(){
 	for (var i = 0; i < gameSize; i++){
 		$("#square" + i).click(onSquareClicked);
 	}
-	
-
+	$("#resetButton").click(resetBoardState);
+	$("#checkForWinButton").click(function (){
+		var winner = checkForWin(board);
+		if (winner != pieceTypes.empty){
+			promptWinner(winner);
+		}
+	});
 }
 
 //wait for jquery to load before doing jquery things, or it won't work!
