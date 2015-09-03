@@ -35,7 +35,9 @@ var player2 = pieceTypes.O;
 
 var currentPlayer = player1;
 
-var gameSize = 9; //9 squares (3x3 board)
+var currentPlayer = player2;
+
+var gameSize = 9;  //9 squares (3x3 board)
 
 //9 empty pieces to start
 var board = 
